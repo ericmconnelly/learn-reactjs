@@ -4,13 +4,15 @@ var bower_dir = path.join(__dirname, 'bower_components');
 var node_modules_dir = path.join(__dirname, 'node_modules');
 
 var config = {
+    devtool: 'inline-source-map',
     addVendor: function (name, path) {
         this.resolve.alias[name] = path;
         this.module.noParse.push(path);
     },
     cache: true,
     entry: {
-        app: ['./js/app.js'],
+        app: ["webpack/hot/dev-server", "./js/app.js"],
+        //app: ['./js/app.js'],
         //拆分应用和第三方应用
         vendors: ['react','jquery','bootstrap','bootstrap.css', 'lodash']
     },
@@ -25,8 +27,14 @@ var config = {
     },
     module: {
         noParse: [],
+
         loaders: [
-            {test: /\.js$/, loader: 'babel-loader', exclude: [bower_dir, node_modules_dir]},
+            {
+                test: /\.js?$/,
+                loaders: ['react-hot', 'babel'],
+                exclude: [bower_dir, node_modules_dir]
+            },
+            //{test: /\.js$/, loader: ['react-hot', 'babel'], exclude: [bower_dir, node_modules_dir]},
             {test: /\.css$/, loader: 'style-loader!css-loader'},
             {test: path.resolve(bower_dir, 'jquery/jquery.min.js'), loader: 'expose?jQuery'},
             {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff"},
@@ -38,7 +46,9 @@ var config = {
     },
     plugins: [
         //如果用了*.min.js 就没有必要再次混淆编译
-        new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
+        //new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NoErrorsPlugin(),
         new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')
     ]
 };
