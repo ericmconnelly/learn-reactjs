@@ -6,6 +6,7 @@ import DropdownList from '../common/DropdownList.react';
 import TagStore from '../stores/TagStore';
 import TagConstant from '../constants/TagConstants';
 import DateFormatUtils from '../utils/DateFormatUtils';
+import TagsWebAPIUtils from '../utils/TagsWebAPIUtils';
 
 export default class Tag extends Component {
 
@@ -22,7 +23,17 @@ export default class Tag extends Component {
     }
 
     _onSubmit() {
-        this.setState({isEditing: false});
+        var postData = {
+            "imei": "",
+            "platform": "android",
+            "items": []
+        };
+        postData.items.push(this.state.tag);
+        TagsWebAPIUtils.update(postData, data => {
+            var tag = this.state.tag;
+            tag.cur_version = data[0].cur_version;
+            this.setState({isEditing: false, tag: tag});
+        });
     }
 
     _onSave(propName, value) {

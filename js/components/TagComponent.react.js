@@ -18,6 +18,7 @@ export default class TagComponent extends Component {
         super(props);
         this.state = {
             tags: TagStore.getAllTags(),
+            pageSize: 50,
             page: TagStore.getTagPage()
         };
     }
@@ -56,10 +57,10 @@ export default class TagComponent extends Component {
     }
 
     _onChangePage(page) {
-        TagsWebAPIUtils.load(page - 1, 10, data => {
+        TagsWebAPIUtils.load(page - 1, this.state.pageSize, data => {
             data.page = {
                 currentPage: page - 1,
-                pageSize: 10,
+                pageSize: this.state.pageSize,
                 totalPage: data.total_page,
                 count: data.count
             };
@@ -72,10 +73,10 @@ export default class TagComponent extends Component {
      * componentWillMount会在组件render之前执行，并且永远都只执行一次
      */
     componentWillMount() {
-        TagsWebAPIUtils.load(0, 10, data => {
+        TagsWebAPIUtils.load(0, this.state.pageSize, data => {
             data.page = {
                 currentPage: 0,
-                pageSize: 10,
+                pageSize: this.state.pageSize,
                 totalPage: data.total_page,
                 count: data.count
             };
