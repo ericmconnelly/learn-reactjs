@@ -1,3 +1,3 @@
-export default {
+var config = {
     host: 'contacts.dev.web.nd'
 };

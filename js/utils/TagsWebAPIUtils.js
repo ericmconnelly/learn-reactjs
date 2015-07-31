@@ -1,7 +1,6 @@
 'use strict';
 
 import $ from 'jquery';
-import config from '../config.js';
 
 export default {
     load: function (page, size, success) {
