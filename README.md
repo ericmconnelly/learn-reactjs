@@ -1,119 +1,69 @@
-learn-reactjs
-=============
+# DJ人脉公共标签维护
 
-#Resources to Learn ReactJS - build web &amp; mobile apps.
+##用webpack构建的简单React应用实践
 
-ReactJS is for the front end of web/mobile apps. It can be used to render pages on it's own, or from within other frameworks such as MeteorJS or AngularJS. ReactJS code is JavaScript + HTML/JSX - (look at JSX as just a way to write HTML inside a JavaScript file).
+## Step by Step
 
-**ReactJS - Official Home Page:**
-http://facebook.github.io/react/
+  * 安装nodejs
+  * npm install 相关插件
+    * npm install webpack -g 全局安装webpack
+    * npm install xxx-loader --save-dev 加入相应资源加载工具
+  * 执行webpack打包到bundle.js
 
-###Code Examples
-**Official ReactJS Example page:**
-http://facebook.github.io/react/docs/examples.html
+## webpack配置文件
+```js
+// webpack.config.js
+var webpack = require('webpack');
+var path = require('path');
+var bower_dir = path.join(__dirname, 'bower_components');
+var node_modules_dir = path.join(__dirname, 'node_modules');
 
+var config = {
+    addVendor: function (name, path) {
+        this.resolve.alias[name] = path;
+        this.module.noParse.push(path);
+    },
+    cache: true,
+    entry: {
+        app: ['./js/app.js'],
+        //拆分应用和第三方应用
+        vendors: ['react','jquery','bootstrap','bootstrap.css']
+    },
+    output: {
+        //多重入口的场景 可以选对应用名称打包应用文件 example:(app/mobile)
+        //filename: '[name].js'
+        path: path.join(__dirname, 'dist'),
+        filename: "bundle.js"
+    },
+    resolve: {
+        alias: {}
+    },
+    module: {
+        noParse: [],
+        loaders: [
+            {test: /\.js$/, loader: 'jsx-loader', exclude: [bower_dir, node_modules_dir]},
+            {test: /\.css$/, loader: 'style-loader!css-loader'},
+            {test: path.resolve(bower_dir, 'jquery/jquery.min.js'), loader: 'expose?jQuery'},
+            {test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff"},
+            {test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff2"},
+            {test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/octet-stream"},
+            {test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file"},
+            {test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=image/svg+xml"}
+        ]
+    },
+    plugins: [
+        new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')
+        //如果用了*.min.js 就没有必要再次混淆编译
+        //new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } })
+    ]
+};
 
-**A simple Reddit Client with React JS - JSFiddle**
-http://jsfiddle.net/ssorallen/fEsYt
+config.addVendor('react', path.resolve(bower_dir, 'react/react.min.js'));
+//config.addVendor('flux', path.resolve(bower_dir, 'ss/Flux.js'));
+config.addVendor('jquery', path.resolve(bower_dir, 'jquery/jquery.min.js'));
+config.addVendor('bootstrap', bower_dir + '/bootstrap/js/bootstrap.min.js');
+config.addVendor('bootstrap.css', bower_dir + '/bootstrap/css/bootstrap.min.css');
 
+module.exports = config;
+```
 
-**ReactJS demo's & Mobile:**
-http://facebook.github.io/react/blog/2013/12/30/community-roundup-13.html
-
-
-**React Rocks - tons of code samples and demo's:**
-http://react.rocks/
-
-###Blog Posts
-**Why I chose ReactJS ?**
-http://giantelk.wordpress.com/2014/08/27/why-i-chose-reactjs/
-
-
-**5 Best Mobile Web App Frameworks: React | Modus Create**
-http://moduscreate.com/5-best-mobile-web-app-frameworks-reactjs
-
-
-**Why We May Ditch AngularJS For React**
-http://wiredcraft.com/posts/2014/08/20/why-we-may-ditch-angularjs-for-react.html
-
-
-**Moving Atom To React**
-http://blog.atom.io/2014/07/02/moving-atom-to-react.html
-
-
-**The Secrets of React's Virtual DOM**
-http://fluentconf.com/fluent2014/public/schedule/detail/32395
-
-
-###Tutorials
-**React.js tutorial: Learn the basics in 5 minutes:**
-http://webdesignporto.com/react-js-in-pure-javascript-facebook-library/
-
-
-**React js: learn the basics the right way, knowledge after real world project experience:**
-http://webdesignporto.com/react-js-learn-the-basics-the-right-way-knowledge-after-real-world-project-experience/
-
-
-**React PhoneCat: Rewriting the AngularJS Tutorial App in React**
-Awesome overview of ReactJS with a great example app.
-http://jgebhardt.github.io/blog/react-phonecat/
-
-
-**Reactive table:**
-http://www.phpied.com/reactive-table/
-
-
-**Remarkable React:**
-http://www.phpied.com/remarkable-react/
-
-
-### Useful Libraries
-**Router for ReactJS:**
-https://github.com/rackt/react-router
-
-**Reactify**
-Transforms JSX to JavaScript via Node package, for use in build system i.e. with Gulp, Browserify or Wacherify.
-https://www.npmjs.org/package/reactify
-
-
-**Browserify**
-Browser-side require() the node way. Allows you to separate JS files into modules, and use Node NPM packages on the client.
-https://www.npmjs.org/package/browserify
-
-
-**Watchify**
-Watch mode for browserify builds. Automatically runs Browserify when files are changes/saved.
-https://www.npmjs.org/package/watchify
-
-
-### Getting help
-**Stack Overflow Q&A for ReactJS** 
-Don't be put off by the small # of questions, ReactJS is so easy to learn that you're questions will be mostly about other parts of the app, i.e. JavaScript, CSS, backend stuff:
-http://stackoverflow.com/questions/tagged/reactjs
-
-
-### Social Media & ReactJS
-**There's lot's of info on ReactJS on Twitter & Google+ and other social media sites**
-
-https://twitter.com/ReactJSNews
-
-https://twitter.com/ReactJS
-
-https://plus.google.com/communities/114822536557370957541
-
-**Reddit search for ReactJS:**
-http://www.reddit.com/search?q=reactjs
-
-**Hacker News search for ReactJS:**
-https://hn.algolia.com/?q=reactjs#!/story/forever/0/reactjs
-
-
-### JavaScript Primer
-Written for MeteorJS, but this is generic JavaScript so good for any JS project:
-https://www.discovermeteor.com/blog/javascript-for-meteor/
-
-### Way More ReactJS resources
-From videos to Components and more:
-https://github.com/enaqx/awesome-react
-
- - end - 
