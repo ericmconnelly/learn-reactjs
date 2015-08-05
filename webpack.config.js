@@ -12,7 +12,8 @@ var config = {
     entry: {
         app: ['./js/app.js'],
         //拆分应用和第三方应用
-        vendors: ['react','jquery','bootstrap','bootstrap.css', 'lodash','react-router','react-mixin']
+        vendors: ['react', 'react-router', 'react-mixin',
+            'jquery', 'bootstrap', 'bootstrap.css', 'lodash', 'crypto-js']
     },
     output: {
         //多重入口的场景 可以选对应用名称打包应用文件 example:(app/mobile)
@@ -38,7 +39,7 @@ var config = {
     },
     plugins: [
         //如果用了*.min.js 就没有必要再次混淆编译
-        //new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
+        new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
         new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')
     ]
 };

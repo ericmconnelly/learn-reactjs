@@ -3,6 +3,8 @@
 import React, { Component } from 'react/addons';
 import ReactMixin from 'react-mixin';
 import AuthService from '../services/AuthService';
+import LoginActions from '../actions/LoginActions';
+
 
 export default class Login extends Component {
 
@@ -16,7 +18,17 @@ export default class Login extends Component {
 
     login(e) {
         e.preventDefault();
-        AuthService.login(this.state.user, this.state.password);
+        AuthService.login(this.state.user, this.state.password, this.loginSuccess, this.loginFailure);
+    }
+
+
+    loginSuccess(username, data) {
+        LoginActions.loginUser(username, data);
+    }
+
+    loginFailure(error) {
+        var err = JSON.parse(error.responseText);
+        alert(err.message);
     }
 
     render() {

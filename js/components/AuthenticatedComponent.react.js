@@ -1,68 +1,47 @@
-'use strict';
-
-import React, { Component } from 'react';
-import ReactRouter, { RouteHandler , Link}  from 'react-router';
+import React from 'react';
 import LoginStore from '../stores/LoginStore';
-import AuthService from '../services/AuthService';
 
-export default class AuthenticatedComponent extends Component {
-    constructor() {
-        super();
-        this.state = this._getLoginState();
-    }
+export default (ComposedComponent) => {
+    return class AuthenticatedComponent extends React.Component {
 
-    _getLoginState() {
-        return {
-            userLoggedIn: LoginStore.isLoggedIn()
-        };
-    }
+        static willTransitionTo(transition) {
+            if (!LoginStore.isLoggedIn()) {
+                transition.redirect('/login', {}, {'nextPath' : transition.path});
+            }
+        }
 
-    _onChange() {
-        this.setState(this._getLoginState());
-    }
+        constructor() {
+            super();
+            this.state = this._getLoginState();
+        }
 
-    logout(e) {
-        e.preventDefault();
-        AuthService.logout();
-    }
+        _getLoginState() {
+            return {
+                userLoggedIn: LoginStore.isLoggedIn(),
+                user: LoginStore.user
+            };
+        }
 
-    componentDidMount() {
-        LoginStore.addChangeListener(this._onChange.bind(this));
-    }
+        componentDidMount() {
+            this.changeListener = this._onChange.bind(this);
+            LoginStore.addChangeListener(this.changeListener);
+        }
 
-    componentWillUnmount() {
-        LoginStore.removeChangeListener(this._onChange.bind(this));
-    }
+        _onChange() {
+            this.setState(this._getLoginState());
+        }
 
-    get headerItems() {
-        if (this.state.userLoggedIn) {
+        componentWillUnmount() {
+            LoginStore.removeChangeListener(this.changeListener);
+        }
+
+        render() {
             return (
-                <ul className="nav navbar-nav navbar-right">
-                    <li>
-                        <Link to="home">主页</Link>
-                    </li>
-                    <li>
-                        <Link to="tags">标签列表</Link>
-                    </li>
-                    <li>
-                        <a href="" onClick={this.logout}>登出</a>
-                    </li>
-                </ul>);
+                <ComposedComponent
+                    {...this.props}
+                    user={this.state.user}
+                    userLoggedIn={this.state.userLoggedIn} />
+            );
         }
     }
-
-
-    render() {
-        return (
-        <div className="container theme-showcas">
-            <nav className="navbar navbar-default">
-                <div className="navbar-header">
-                    <a className="navbar-brand" href="/">公共标签</a>
-                </div>
-                {this.headerItems}
-            </nav>
-            <RouteHandler/>
-        </div>
-        );
-    }
-}
+};

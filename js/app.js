@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import ReactRouter, {Route, DefaultRoute, RouteHandler, Link}  from 'react-router';
-import AuthenticatedComponent from './components/AuthenticatedComponent.react';
+import AuthenticatedApp from './components/AuthenticatedApp.react';
 import TagComponent from './components/TagComponent.react';
 import Login from './components/Login.react';
 import Home from './components/Home.react';
@@ -11,7 +11,7 @@ import LoginActions from './actions/LoginActions';
 
 
 var routes = (
-    <Route handler={AuthenticatedComponent}>
+    <Route handler={AuthenticatedApp}>
         <DefaultRoute handler={Home}/>
         <Route name="login" handler={Login}/>
         <Route name="tags"  handler={TagComponent}/>

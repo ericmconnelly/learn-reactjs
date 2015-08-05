@@ -11,8 +11,9 @@ import TagActions  from '../actions/TagActions';
 import TagStore from '../stores/TagStore';
 import TagsWebAPIUtils from '../utils/TagsWebAPIUtils';
 import ColumnFilterUtils from '../utils/ColumnFilterUtils';
+import AuthenticatedComponent from './AuthenticatedComponent.react.js'
 
-export default class TagComponent extends Component {
+export default AuthenticatedComponent(class TagComponent extends Component {
 
     constructor(props) {
         super(props);
@@ -127,4 +128,4 @@ export default class TagComponent extends Component {
             </div>
         );
     }
-}
+});
