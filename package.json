@@ -1,7 +1,7 @@
 {
   "name": "common-tag",
   "version": "0.0.1",
-  "description": "DJ人脉系统维护公共标签",
+  "description": "common-tag",
   "author": "987011",
   "main": "js/main.js",
   "scripts": {
