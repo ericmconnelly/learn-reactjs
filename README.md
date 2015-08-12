@@ -1,6 +1,4 @@
-# DJ人脉公共标签维护
-
-##用webpack构建的简单React应用实践
+﻿#用webpack构建的简单React应用实践
 
 ## Step by Step
 
@@ -53,7 +51,6 @@ var config = {
     },
     plugins: [
         new webpack.optimize.CommonsChunkPlugin('vendors', 'vendors.js')
-        //如果用了*.min.js 就没有必要再次混淆编译
         //new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } })
     ]
 };
